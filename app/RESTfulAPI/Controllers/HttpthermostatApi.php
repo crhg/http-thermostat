@@ -16,6 +16,7 @@ namespace App\RESTfulAPI\Controllers;
 
 use App\RESTfulAPI\Codegen\Controllers\HttpthermostatApiBase;
 use Illuminate\Http\Request;
+use Response;
 
 class HttpthermostatApi extends HttpthermostatApiBase
 {
@@ -36,8 +37,16 @@ class HttpthermostatApi extends HttpthermostatApiBase
      */
     protected function status(Request $request)
     {
-        $xebug_session_start = $request->input('xebug_session_start');
-        return response('How about implementing status as a GET method ?');
+        $result = [
+            'targetHeatingCoolingState' => 1,
+            'targetTemperature' => 25.0,
+            'targetRelativeHumidity' => 0.5,
+            'currentHeatingCoolingState' => 1,
+            'currentTemperature' => 25.0,
+            'currentRelativeHumidity' => 0.5,
+        ];
+
+        return Response::json($result);
     }
 
     /**
@@ -51,7 +60,8 @@ class HttpthermostatApi extends HttpthermostatApiBase
      */
     protected function targetHeatingCoolingState(Request $request, $state)
     {
-        return response('How about implementing targetHeatingCoolingState as a GET method ?');
+        \Log::debug('targetHeatingCoolingState', ['state' => $state]);
+        return response('Ok')->setStatusCode(200);
     }
 
     /**
@@ -65,7 +75,8 @@ class HttpthermostatApi extends HttpthermostatApiBase
      */
     protected function targetRelativeHumidity(Request $request, $humidity)
     {
-        return response('How about implementing targetRelativeHumidity as a GET method ?');
+        \Log::debug('targetRelativeHumidity', ['humidity' => $humidity]);
+        return response('Ok')->setStatusCode(200);
     }
 
     /**
@@ -79,7 +90,7 @@ class HttpthermostatApi extends HttpthermostatApiBase
      */
     protected function targetTemperature(Request $request, $temp)
     {
-        return response('How about implementing targetTemperature as a GET method ?');
+        \Log::debug('targetTemperature', ['temp' => $temp]);
+        return response('Ok')->setStatusCode(200);
     }
-
 }
