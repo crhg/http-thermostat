@@ -167,6 +167,7 @@ return [
         /*
          * Package Service Providers...
          */
+        \LaravelOpenAPI\LaravelOpenAPIProvider::class,
 
         /*
          * Application Service Providers...
