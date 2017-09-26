@@ -208,7 +208,7 @@ class HttpthermostatApi extends HttpthermostatApiBase
         $accessory = config('thermostat.' . $thermostat->name . '.accessory');
         $command = $this->selectCommand($thermostat);
         \Log::debug('send', ['accessory' => $accessory, 'command' => $command]);
-        
+
         IRkit::send($accessory, $command);
     }
 

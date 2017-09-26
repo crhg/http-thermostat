@@ -116,7 +116,7 @@ abstract class HttpthermostatApiBase extends Controller
     }
 
     /**
-     * Operation false
+     * Operation off
      *
      * off.
      *
@@ -125,14 +125,14 @@ abstract class HttpthermostatApiBase extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function falseWithValidate(Request $request, $name)
+    public function offWithValidate(Request $request, $name)
     {
-        $this->falseValidate($request, $name);
-        return $this->false($request, $name);
+        $this->offValidate($request, $name);
+        return $this->off($request, $name);
     }
 
     /**
-     * Validate false
+     * Validate off
      *
      * off.
      *
@@ -140,7 +140,7 @@ abstract class HttpthermostatApiBase extends Controller
      * @param string $name  (required)
      *
      */
-    protected function falseValidate(Request $request, $name)
+    protected function offValidate(Request $request, $name)
     {
         // path params validation
 
@@ -284,7 +284,7 @@ abstract class HttpthermostatApiBase extends Controller
     abstract protected function auto(Request $request, $name);
     abstract protected function comfort(Request $request, $name);
     abstract protected function noFrost(Request $request, $name);
-    abstract protected function false(Request $request, $name);
+    abstract protected function off(Request $request, $name);
     abstract protected function status(Request $request, $name);
     abstract protected function targetHeatingCoolingState(Request $request, $name, $state);
     abstract protected function targetRelativeHumidity(Request $request, $name, $humidity);

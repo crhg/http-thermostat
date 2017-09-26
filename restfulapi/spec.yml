@@ -42,7 +42,7 @@ paths:
       description: "off"
       tags:
       - "http-thermostat"
-      operationId: off
+      operationId: "off"
       responses:
         200:
           description: "OK"
