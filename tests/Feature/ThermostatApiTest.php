@@ -9,6 +9,7 @@
 namespace Tests\Feature;
 
 use App;
+use Crhg\LaravelIRKit\Facades\IRKit;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -25,17 +26,20 @@ class ThermostatApiTest extends TestCase
 
     public function testStatus()
     {
-        $name = $this->generateThermostatName();
+        $name = 'thermostat1';
         $response = $this->get("/api/thermostat/$name/status");
         $response->assertStatus(200);
     }
 
     public function testTargetHeatingCoolingState()
     {
-        $name = $this->generateThermostatName();
+        $name = 'thermostat1';
         $response = $this->get("/api/thermostat/$name/status");
         $response->assertStatus(200);
 
+        IRKit::shouldReceive('send')
+            ->once()
+            ->with('aircon', 'h25');
         $response = $this->get("/api/thermostat/$name/targetHeatingCoolingState/1");
         $response->assertStatus(200);
 
@@ -46,7 +50,7 @@ class ThermostatApiTest extends TestCase
 
     public function testTargetTemperature()
     {
-        $name = $this->generateThermostatName();
+        $name = 'thermostat1';
         $response = $this->get("/api/thermostat/$name/status");
         $response->assertStatus(200);
 
@@ -61,13 +65,6 @@ class ThermostatApiTest extends TestCase
                 'targetTemperature'        => 23.0,
             ]
         );
-    }
-
-    protected function generateThermostatName()
-    {
-        $faker = App::make(\Faker\Generator::class);
-        $name = $faker->domainWord();
-        return $name;
     }
 
     public function runDatabaseMigrations()

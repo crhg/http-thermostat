@@ -15,7 +15,9 @@
 namespace App\RESTfulAPI\Controllers;
 
 use App\RESTfulAPI\Codegen\Controllers\HttpthermostatApiBase;
+use App\RESTfulAPI\Middleware\CheckThermostatName;
 use App\Thermostat;
+use Crhg\LaravelIRKit\Facades\IRKit;
 use Illuminate\Http\Request;
 use Response;
 
@@ -26,6 +28,7 @@ class HttpthermostatApi extends HttpthermostatApiBase
      */
     public function __construct()
     {
+        $this->middleware(CheckThermostatName::class);
     }
 
     /**
@@ -92,6 +95,8 @@ class HttpthermostatApi extends HttpthermostatApiBase
             throw new \Exception("invalid state: $state");
         }
 
+        $this->send($thermostat);
+
         $thermostat->save();
 
         return response('Ok')->setStatusCode(200);
@@ -139,5 +144,44 @@ class HttpthermostatApi extends HttpthermostatApiBase
         $thermostat->save();
 
         return response('Ok')->setStatusCode(200);
+    }
+
+    protected function send(Thermostat $thermostat)
+    {
+        $accessory = config('thermostat.'.$thermostat->name.'.accessory');
+        $command = $this->selectCommand($thermostat);
+        IRkit::send($accessory, $command);
+    }
+
+    protected function selectCommand(Thermostat $thermostat)
+    {
+        if ($thermostat->on_off == Thermostat::OFF) {
+            return config('thermostat.'.$thermostat->name.'.command.off');
+        } else {
+            $heating_or_cooling = $thermostat->heating_cooling == Thermostat::HEATING? 'heating': 'cooling';
+            $target_temperature = $thermostat->target_temperature;
+            $e = collect(config('thermostat.thermostat1.command.'.$heating_or_cooling))
+                ->reduce(
+                    function ($current, $e) use ($target_temperature) {
+                        if (is_null($current)) {
+                            return $e;
+                        }
+
+                        $distance_e = abs($e['temperature'] - $target_temperature);
+                        $distance_current = abs($current['temperature'] - $target_temperature);
+
+                        if ($distance_e < $distance_current) {
+                            return $e;
+                        }
+
+                        if ($distance_e == $distance_current && $e['temperature'] > $current['temperature']) {
+                            return $e;
+                        }
+
+                        return $current;
+                    }
+                );
+            return $e['command'];
+        }
     }
 }
