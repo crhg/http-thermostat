@@ -25,13 +25,14 @@ abstract class HttpthermostatApiBase extends Controller
      * Get any thermostat info.
      *
      * @param Request $request request object (required)
+     * @param string $name  (required)
      *
      * @return \Illuminate\Http\Response
      */
-    public function statusWithValidate(Request $request)
+    public function statusWithValidate(Request $request, $name)
     {
-        $this->statusValidate($request);
-        return $this->status($request);
+        $this->statusValidate($request, $name);
+        return $this->status($request, $name);
     }
 
     /**
@@ -40,9 +41,10 @@ abstract class HttpthermostatApiBase extends Controller
      * Get any thermostat info.
      *
      * @param Request $request request object (required)
+     * @param string $name  (required)
      *
      */
-    protected function statusValidate(Request $request)
+    protected function statusValidate(Request $request, $name)
     {
         // path params validation
 
@@ -55,14 +57,15 @@ abstract class HttpthermostatApiBase extends Controller
      * Set heating/cooling state.
      *
      * @param Request $request request object (required)
+     * @param string $name  (required)
      * @param float $state  (required)
      *
      * @return \Illuminate\Http\Response
      */
-    public function targetHeatingCoolingStateWithValidate(Request $request, $state)
+    public function targetHeatingCoolingStateWithValidate(Request $request, $name, $state)
     {
-        $this->targetHeatingCoolingStateValidate($request, $state);
-        return $this->targetHeatingCoolingState($request, $state);
+        $this->targetHeatingCoolingStateValidate($request, $name, $state);
+        return $this->targetHeatingCoolingState($request, $name, $state);
     }
 
     /**
@@ -71,10 +74,11 @@ abstract class HttpthermostatApiBase extends Controller
      * Set heating/cooling state.
      *
      * @param Request $request request object (required)
+     * @param string $name  (required)
      * @param float $state  (required)
      *
      */
-    protected function targetHeatingCoolingStateValidate(Request $request, $state)
+    protected function targetHeatingCoolingStateValidate(Request $request, $name, $state)
     {
         // path params validation
 
@@ -87,14 +91,15 @@ abstract class HttpthermostatApiBase extends Controller
      * Set target relative humidity.
      *
      * @param Request $request request object (required)
+     * @param string $name  (required)
      * @param float $humidity  (required)
      *
      * @return \Illuminate\Http\Response
      */
-    public function targetRelativeHumidityWithValidate(Request $request, $humidity)
+    public function targetRelativeHumidityWithValidate(Request $request, $name, $humidity)
     {
-        $this->targetRelativeHumidityValidate($request, $humidity);
-        return $this->targetRelativeHumidity($request, $humidity);
+        $this->targetRelativeHumidityValidate($request, $name, $humidity);
+        return $this->targetRelativeHumidity($request, $name, $humidity);
     }
 
     /**
@@ -103,10 +108,11 @@ abstract class HttpthermostatApiBase extends Controller
      * Set target relative humidity.
      *
      * @param Request $request request object (required)
+     * @param string $name  (required)
      * @param float $humidity  (required)
      *
      */
-    protected function targetRelativeHumidityValidate(Request $request, $humidity)
+    protected function targetRelativeHumidityValidate(Request $request, $name, $humidity)
     {
         // path params validation
 
@@ -119,14 +125,15 @@ abstract class HttpthermostatApiBase extends Controller
      * Set target temperature.
      *
      * @param Request $request request object (required)
+     * @param string $name  (required)
      * @param float $temp  (required)
      *
      * @return \Illuminate\Http\Response
      */
-    public function targetTemperatureWithValidate(Request $request, $temp)
+    public function targetTemperatureWithValidate(Request $request, $name, $temp)
     {
-        $this->targetTemperatureValidate($request, $temp);
-        return $this->targetTemperature($request, $temp);
+        $this->targetTemperatureValidate($request, $name, $temp);
+        return $this->targetTemperature($request, $name, $temp);
     }
 
     /**
@@ -135,18 +142,19 @@ abstract class HttpthermostatApiBase extends Controller
      * Set target temperature.
      *
      * @param Request $request request object (required)
+     * @param string $name  (required)
      * @param float $temp  (required)
      *
      */
-    protected function targetTemperatureValidate(Request $request, $temp)
+    protected function targetTemperatureValidate(Request $request, $name, $temp)
     {
         // path params validation
 
         // not path params validation
     }
 
-    abstract protected function status(Request $request);
-    abstract protected function targetHeatingCoolingState(Request $request, $state);
-    abstract protected function targetRelativeHumidity(Request $request, $humidity);
-    abstract protected function targetTemperature(Request $request, $temp);
+    abstract protected function status(Request $request, $name);
+    abstract protected function targetHeatingCoolingState(Request $request, $name, $state);
+    abstract protected function targetRelativeHumidity(Request $request, $name, $humidity);
+    abstract protected function targetTemperature(Request $request, $name, $temp);
 }

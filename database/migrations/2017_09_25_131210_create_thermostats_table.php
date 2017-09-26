@@ -15,10 +15,14 @@ class CreateThermostatsTable extends Migration
     {
         Schema::create('thermostats', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedTinyInteger('state');
+            $table->string('name');
+            $table->unsignedInteger('on_off');
+            $table->unsignedTinyInteger('heating_cooling');
             $table->unsignedDecimal('target_temperature', 3, 1);
             $table->unsignedDecimal('target_humidity', 3, 2);
             $table->timestamps();
+
+            $table->unique(['name']);
         });
     }
 

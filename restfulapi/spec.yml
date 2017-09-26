@@ -10,7 +10,11 @@ tags:
 schemes:
 - "http"
 paths:
-  /status:
+  "/thermostat/{name}/status":
+    parameters:
+      - name: name
+        in: path
+        type: string
     get:
       tags:
       - "http-thermostat"
@@ -28,8 +32,11 @@ paths:
           description: "OK"
           schema:
              $ref: '#/definitions/StatusValue'
-  "/targetHeatingCoolingState/{state}":
+  "/thermostat/{name}/targetHeatingCoolingState/{state}":
     parameters:
+      - name: name
+        in: path
+        type: string
       - name: state
         in: path
         type: number
@@ -40,10 +47,13 @@ paths:
       - "http-thermostat"
       operationId: targetHeatingCoolingState
       responses:
-        201:
+        200:
           description: "OK"
-  "/targetTemperature/{temp}":
+  "/thermostat/{name}/targetTemperature/{temp}":
     parameters:
+      - name: name
+        in: path
+        type: string
       - name: temp
         in: path
         type: number
@@ -54,10 +64,13 @@ paths:
       - "http-thermostat"
       operationId: targetTemperature
       responses:
-        201:
+        200:
           description: "OK"
-  "/targetRelativeHumidity/{humidity}":
+  "/thermostat/{name}/targetRelativeHumidity/{humidity}":
     parameters:
+      - name: name
+        in: path
+        type: string
       - name: humidity
         in: path
         type: number
@@ -68,7 +81,7 @@ paths:
       - "http-thermostat"
       operationId: targetRelativeHumidity
       responses:
-        201:
+        200:
           description: "OK"
 definitions:
   StatusValue:
