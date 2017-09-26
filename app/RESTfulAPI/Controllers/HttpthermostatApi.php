@@ -49,12 +49,12 @@ class HttpthermostatApi extends HttpthermostatApiBase
         $thermostat = Thermostat::get($name);
 
         $result = [
-            'targetHeatingCoolingState'  => $thermostat->targetHeatingCoolingState(),
-            'targetTemperature'          => 0.0 + $thermostat->target_temperature,
-            'targetRelativeHumidity'     => 0.0 + $thermostat->target_humidity,
+            'targetHeatingCoolingState' => $thermostat->targetHeatingCoolingState(),
+            'targetTemperature' => 0.0 + $thermostat->target_temperature,
+            'targetRelativeHumidity' => 0.0 + $thermostat->target_humidity,
             'currentHeatingCoolingState' => 0 + $thermostat->targetHeatingCoolingState(),
-            'currentTemperature'         => 0.0 + $thermostat->target_temperature,
-            'currentRelativeHumidity'    => 0.0 + $thermostat->target_humidity,
+            'currentTemperature' => 0.0 + $thermostat->target_temperature,
+            'currentRelativeHumidity' => 0.0 + $thermostat->target_humidity,
         ];
 
         return Response::json($result);
@@ -78,22 +78,22 @@ class HttpthermostatApi extends HttpthermostatApiBase
         $thermostat = Thermostat::get($name);
 
         switch ($state) {
-        case 0:
-            $thermostat->on_off = Thermostat::OFF;
-            break;
-        case 1:
-            $thermostat->on_off = Thermostat::ON;
-            $thermostat->heating_cooling = Thermostat::HEATING;
-            break;
-        case 2:
-            $thermostat->on_off = Thermostat::ON;
-            $thermostat->heating_cooling = Thermostat::COOLING;
-            break;
-        case 3:
-            $thermostat->on_off = Thermostat::ON;
-            break;
-        default:
-            throw new \Exception("invalid state: $state");
+            case 0:
+                $thermostat->on_off = Thermostat::OFF;
+                break;
+            case 1:
+                $thermostat->on_off = Thermostat::ON;
+                $thermostat->heating_cooling = Thermostat::HEATING;
+                break;
+            case 2:
+                $thermostat->on_off = Thermostat::ON;
+                $thermostat->heating_cooling = Thermostat::COOLING;
+                break;
+            case 3:
+                $thermostat->on_off = Thermostat::ON;
+                break;
+            default:
+                throw new \Exception("invalid state: $state");
         }
 
         $this->send($thermostat);
@@ -199,20 +199,27 @@ class HttpthermostatApi extends HttpthermostatApiBase
 
     protected function send(Thermostat $thermostat)
     {
-        $accessory = config('thermostat.'.$thermostat->name.'.accessory');
+        \Log::debug('send', [
+            'on_off' => $thermostat->on_off,
+            'heating_cooling' => $thermostat->heating_cooling,
+            'target_temperature' => $thermostat->target_temperature
+        ]);
+
+        $accessory = config('thermostat.' . $thermostat->name . '.accessory');
         $command = $this->selectCommand($thermostat);
         \Log::debug('send', ['accessory' => $accessory, 'command' => $command]);
+        
         IRkit::send($accessory, $command);
     }
 
     protected function selectCommand(Thermostat $thermostat)
     {
         if ($thermostat->on_off == Thermostat::OFF) {
-            return config('thermostat.'.$thermostat->name.'.command.off');
+            return config('thermostat.' . $thermostat->name . '.command.off');
         } else {
-            $heating_or_cooling = $thermostat->heating_cooling == Thermostat::HEATING? 'heating': 'cooling';
+            $heating_or_cooling = $thermostat->heating_cooling == Thermostat::HEATING ? 'heating' : 'cooling';
             $target_temperature = $thermostat->target_temperature;
-            $e = collect(config('thermostat.thermostat1.command.'.$heating_or_cooling))
+            $e = collect(config('thermostat.thermostat1.command.' . $heating_or_cooling))
                 ->reduce(
                     function ($current, $e) use ($target_temperature) {
                         if (is_null($current)) {
