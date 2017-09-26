@@ -24,7 +24,7 @@ class Thermostat extends Model
                 'on_off' => self::OFF,
                 'heating_cooling' => self::COOLING,
                 'target_temperature' => 25.0,
-                'target_humidity' => 0.5,
+                'target_humidity' => 50.0,
             ]
         );
     }
