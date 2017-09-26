@@ -18,6 +18,7 @@ use App\RESTfulAPI\Codegen\Controllers\HttpthermostatApiBase;
 use App\RESTfulAPI\Middleware\CheckThermostatName;
 use App\Thermostat;
 use Crhg\LaravelIRKit\Facades\IRKit;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 use Response;
 
@@ -97,6 +98,54 @@ class HttpthermostatApi extends HttpthermostatApiBase
 
         $this->send($thermostat);
 
+        $thermostat->save();
+
+        return response('Ok')->setStatusCode(200);
+    }
+
+
+    protected function off(Request $request, $name)
+    {
+        \Log::debug('off', ['name' => $name]);
+        $thermostat = Thermostat::get($name);
+        $thermostat->on_off = Thermostat::OFF;
+        $this->send($thermostat);
+        $thermostat->save();
+
+        return response('Ok')->setStatusCode(200);
+    }
+
+    protected function comfort(Request $request, $name)
+    {
+        \Log::debug('comfort', ['name' => $name]);
+        $thermostat = Thermostat::get($name);
+        $thermostat->on_off = Thermostat::ON;
+        $thermostat->heating_cooling = Thermostat::HEATING;
+        $this->send($thermostat);
+        $thermostat->save();
+
+        return response('Ok')->setStatusCode(200);
+    }
+
+    protected function noFrost(Request $request, $name)
+    {
+        \Log::debug('noFrost', ['name' => $name]);
+        $thermostat = Thermostat::get($name);
+        $thermostat->on_off = Thermostat::ON;
+        $thermostat->heating_cooling = Thermostat::COOLING;
+        $this->send($thermostat);
+        $thermostat->save();
+
+        return response('Ok')->setStatusCode(200);
+    }
+
+
+    protected function auto(Request $request, $name)
+    {
+        \Log::debug('auto', ['name' => $name]);
+        $thermostat = Thermostat::get($name);
+        $thermostat->on_off = Thermostat::ON;
+        $this->send($thermostat);
         $thermostat->save();
 
         return response('Ok')->setStatusCode(200);

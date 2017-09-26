@@ -20,6 +20,134 @@ use Illuminate\Http\Request;
 abstract class HttpthermostatApiBase extends Controller
 {
     /**
+     * Operation auto
+     *
+     * auto.
+     *
+     * @param Request $request request object (required)
+     * @param string $name  (required)
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function autoWithValidate(Request $request, $name)
+    {
+        $this->autoValidate($request, $name);
+        return $this->auto($request, $name);
+    }
+
+    /**
+     * Validate auto
+     *
+     * auto.
+     *
+     * @param Request $request request object (required)
+     * @param string $name  (required)
+     *
+     */
+    protected function autoValidate(Request $request, $name)
+    {
+        // path params validation
+
+        // not path params validation
+    }
+
+    /**
+     * Operation comfort
+     *
+     * comfort.
+     *
+     * @param Request $request request object (required)
+     * @param string $name  (required)
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function comfortWithValidate(Request $request, $name)
+    {
+        $this->comfortValidate($request, $name);
+        return $this->comfort($request, $name);
+    }
+
+    /**
+     * Validate comfort
+     *
+     * comfort.
+     *
+     * @param Request $request request object (required)
+     * @param string $name  (required)
+     *
+     */
+    protected function comfortValidate(Request $request, $name)
+    {
+        // path params validation
+
+        // not path params validation
+    }
+
+    /**
+     * Operation noFrost
+     *
+     * no-frost.
+     *
+     * @param Request $request request object (required)
+     * @param string $name  (required)
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function noFrostWithValidate(Request $request, $name)
+    {
+        $this->noFrostValidate($request, $name);
+        return $this->noFrost($request, $name);
+    }
+
+    /**
+     * Validate noFrost
+     *
+     * no-frost.
+     *
+     * @param Request $request request object (required)
+     * @param string $name  (required)
+     *
+     */
+    protected function noFrostValidate(Request $request, $name)
+    {
+        // path params validation
+
+        // not path params validation
+    }
+
+    /**
+     * Operation false
+     *
+     * off.
+     *
+     * @param Request $request request object (required)
+     * @param string $name  (required)
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function falseWithValidate(Request $request, $name)
+    {
+        $this->falseValidate($request, $name);
+        return $this->false($request, $name);
+    }
+
+    /**
+     * Validate false
+     *
+     * off.
+     *
+     * @param Request $request request object (required)
+     * @param string $name  (required)
+     *
+     */
+    protected function falseValidate(Request $request, $name)
+    {
+        // path params validation
+
+        // not path params validation
+    }
+
+    /**
      * Operation status
      *
      * Get any thermostat info.
@@ -153,6 +281,10 @@ abstract class HttpthermostatApiBase extends Controller
         // not path params validation
     }
 
+    abstract protected function auto(Request $request, $name);
+    abstract protected function comfort(Request $request, $name);
+    abstract protected function noFrost(Request $request, $name);
+    abstract protected function false(Request $request, $name);
     abstract protected function status(Request $request, $name);
     abstract protected function targetHeatingCoolingState(Request $request, $name, $state);
     abstract protected function targetRelativeHumidity(Request $request, $name, $humidity);

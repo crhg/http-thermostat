@@ -24,6 +24,10 @@ class Routes
     public static function addApiRoutes()
     {
         // HTTP Thermostat (1.0.0)
+        \Route::GET('/api/thermostat/{name}/auto', '\App\RESTfulAPI\Controllers\HttpthermostatApi@autoWithValidate');
+        \Route::GET('/api/thermostat/{name}/comfort', '\App\RESTfulAPI\Controllers\HttpthermostatApi@comfortWithValidate');
+        \Route::GET('/api/thermostat/{name}/no-frost', '\App\RESTfulAPI\Controllers\HttpthermostatApi@noFrostWithValidate');
+        \Route::GET('/api/thermostat/{name}/off', '\App\RESTfulAPI\Controllers\HttpthermostatApi@falseWithValidate');
         \Route::GET('/api/thermostat/{name}/status', '\App\RESTfulAPI\Controllers\HttpthermostatApi@statusWithValidate');
         \Route::GET('/api/thermostat/{name}/targetHeatingCoolingState/{state}', '\App\RESTfulAPI\Controllers\HttpthermostatApi@targetHeatingCoolingStateWithValidate');
         \Route::GET('/api/thermostat/{name}/targetRelativeHumidity/{humidity}', '\App\RESTfulAPI\Controllers\HttpthermostatApi@targetRelativeHumidityWithValidate');
