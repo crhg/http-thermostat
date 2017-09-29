@@ -1,5 +1,3 @@
-[homebridge-thermostat](https://www.npmjs.com/package/homebridge-thermostat)
-が要求するapiに従ってIRKitを使ってエアコンを制御するサーバです。Laravelで作成しています。
 # Overview
 It is a server that uses IRKit to control air conditioner according to api requested by [homebridge-thermostat](https://www.npmjs.com/package/homebridge-thermostat). I am creating it with Laravel.
 
