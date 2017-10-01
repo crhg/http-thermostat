@@ -12,9 +12,10 @@ schemes:
 paths:
   "/thermostat/{name}/status":
     parameters:
-      - name: name
-        in: path
-        type: string
+    - name: name
+      in: path
+      type: string
+      required: true
     get:
       tags:
       - "http-thermostat"
@@ -37,6 +38,7 @@ paths:
       - name: name
         in: path
         type: string
+        required: true
     get:
       summary: "off"
       description: "off"
@@ -56,6 +58,7 @@ paths:
       - name: name
         in: path
         type: string
+        required: true
     get:
       summary: "comfort"
       description: "comfort = heating"
@@ -75,6 +78,7 @@ paths:
       - name: name
         in: path
         type: string
+        required: true
     get:
       summary: "no-frost"
       description: "no-frost = cooling"
@@ -94,6 +98,7 @@ paths:
       - name: name
         in: path
         type: string
+        required: true
     get:
       summary: "auto"
       description: "auto"
@@ -113,9 +118,11 @@ paths:
       - name: name
         in: path
         type: string
+        required: true
       - name: state
         in: path
         type: number
+        required: true
     get:
       summary: "Set heating/cooling state"
       description: "Set heating/cooling state"
@@ -135,9 +142,11 @@ paths:
       - name: name
         in: path
         type: string
+        required: true
       - name: temp
         in: path
         type: number
+        required: true
     get:
       summary: "Set target temperature"
       description: "Set target temperature"
@@ -152,9 +161,11 @@ paths:
       - name: name
         in: path
         type: string
+        required: true
       - name: humidity
         in: path
         type: number
+        required: true
     get:
       summary: "Set target relative humidity"
       description: "Set target relative humidity"
