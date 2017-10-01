@@ -18,7 +18,6 @@ use App\RESTfulAPI\Codegen\Controllers\HttpthermostatApiBase;
 use App\RESTfulAPI\Middleware\CheckThermostatName;
 use App\Thermostat;
 use Crhg\LaravelIRKit\Facades\IRKit;
-use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 use Response;
 
@@ -40,7 +39,7 @@ class HttpthermostatApi extends HttpthermostatApiBase
      * @param Request $request
      * @param string $name thermostat name
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     protected function status(Request $request, $name)
     {
@@ -68,84 +67,125 @@ class HttpthermostatApi extends HttpthermostatApiBase
      * @param Request $request
      * @param string $name
      * @param float $state (required)
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      * @throws \Exception
      */
     protected function targetHeatingCoolingState(Request $request, $name, $state)
     {
         \Log::debug('targetHeatingCoolingState', ['accessory' => $name, 'state' => $state]);
 
-        $thermostat = Thermostat::get($name);
-
+        $heating_cooling = null;
         switch ($state) {
             case 0:
-                $thermostat->on_off = Thermostat::OFF;
+                $on_off = Thermostat::OFF;
                 break;
             case 1:
-                $thermostat->on_off = Thermostat::ON;
-                $thermostat->heating_cooling = Thermostat::HEATING;
+                $on_off = Thermostat::ON;
+                $heating_cooling = Thermostat::HEATING;
                 break;
             case 2:
-                $thermostat->on_off = Thermostat::ON;
-                $thermostat->heating_cooling = Thermostat::COOLING;
+                $on_off = Thermostat::ON;
+                $heating_cooling = Thermostat::COOLING;
                 break;
             case 3:
-                $thermostat->on_off = Thermostat::ON;
+                $on_off = Thermostat::ON;
                 break;
             default:
                 throw new \Exception("invalid state: $state");
         }
 
-        $this->send($thermostat);
-
-        $thermostat->save();
-
-        return response('Ok')->setStatusCode(200);
+        return $this->setOperationStatus($request, $name, $on_off, $heating_cooling);
     }
 
-
+    /**
+     * Operation off
+     *
+     * Set heating/cooling state to off.
+     *
+     * @param Request $request
+     * @param string $name
+     * @return \Illuminate\Http\JsonResponse
+     */
     protected function off(Request $request, $name)
     {
         \Log::debug('off', ['name' => $name]);
-        $thermostat = Thermostat::get($name);
-        $thermostat->on_off = Thermostat::OFF;
-        $this->send($thermostat);
-        $thermostat->save();
-
-        return response('Ok')->setStatusCode(200);
+        return $this->setOperationStatus($request, $name, Thermostat::OFF, null);
     }
 
+    /**
+     * Operation comfort
+     *
+     * Set heating/cooling state to heating.
+     *
+     * @param Request $request
+     * @param string $name
+     * @return \Illuminate\Http\JsonResponse
+     */
     protected function comfort(Request $request, $name)
     {
         \Log::debug('comfort', ['name' => $name]);
-        $thermostat = Thermostat::get($name);
-        $thermostat->on_off = Thermostat::ON;
-        $thermostat->heating_cooling = Thermostat::HEATING;
-        $this->send($thermostat);
-        $thermostat->save();
-
-        return response('Ok')->setStatusCode(200);
+        return $this->setOperationStatus($request, $name, Thermostat::ON, Thermostat::HEATING);
     }
 
+    /**
+     * Operation noFrost
+     *
+     * Set heating/cooling state to cooling.
+     *
+     * @param Request $request
+     * @param string $name
+     * @return \Illuminate\Http\JsonResponse
+     */
     protected function noFrost(Request $request, $name)
     {
         \Log::debug('noFrost', ['name' => $name]);
-        $thermostat = Thermostat::get($name);
-        $thermostat->on_off = Thermostat::ON;
-        $thermostat->heating_cooling = Thermostat::COOLING;
-        $this->send($thermostat);
-        $thermostat->save();
-
-        return response('Ok')->setStatusCode(200);
+        return $this->setOperationStatus($request, $name, Thermostat::ON, Thermostat::COOLING);
     }
 
-
+    /**
+     * Operation auto
+     *
+     * Set heating/cooling state to auto.
+     *
+     * @param Request $request
+     * @param string $name
+     * @return \Illuminate\Http\JsonResponse
+     */
     protected function auto(Request $request, $name)
     {
         \Log::debug('auto', ['name' => $name]);
+        return $this->setOperationStatus($request, $name, Thermostat::ON, null);
+    }
+
+    /**
+     * set operation status of thermostat
+     *
+     * @param Request $request
+     * @param string $name
+     * @param int $on_off
+     * @param int $heating_cooling
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function setOperationStatus(Request $request, $name, $on_off, $heating_cooling)
+    {
+        /** @var Thermostat $thermostat */
         $thermostat = Thermostat::get($name);
-        $thermostat->on_off = Thermostat::ON;
+
+        if (isset($on_off)) {
+            $thermostat->on_off = $on_off;
+        }
+
+        if (isset($heating_cooling)) {
+            $thermostat->heating_cooling = $heating_cooling;
+        }
+
+        $temp = $request->input('temp', null);
+        if (isset($temp)) {
+            $thermostat->target_temperature = $temp;
+        }
+
         $this->send($thermostat);
+
         $thermostat->save();
 
         return response('Ok')->setStatusCode(200);
@@ -188,6 +228,7 @@ class HttpthermostatApi extends HttpthermostatApiBase
     {
         \Log::debug('targetTemperature', ['accessory' => $name, 'temp' => $temp]);
 
+        /** @var Thermostat $thermostat */
         $thermostat = Thermostat::get($name);
         $thermostat->target_temperature = $temp;
         $thermostat->save();

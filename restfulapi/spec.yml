@@ -43,6 +43,11 @@ paths:
       tags:
       - "http-thermostat"
       operationId: "off"
+      parameters:
+        - name: temp
+          in: query
+          type: number
+          required: false
       responses:
         200:
           description: "OK"
@@ -57,6 +62,11 @@ paths:
       tags:
       - "http-thermostat"
       operationId: comfort
+      parameters:
+        - name: temp
+          in: query
+          type: number
+          required: false
       responses:
         200:
           description: "OK"
@@ -71,6 +81,11 @@ paths:
       tags:
       - "http-thermostat"
       operationId: noFrost
+      parameters:
+        - name: temp
+          in: query
+          type: number
+          required: false
       responses:
         200:
           description: "OK"
@@ -85,6 +100,11 @@ paths:
       tags:
       - "http-thermostat"
       operationId: auto
+      parameters:
+         - name: temp
+           in: query
+           type: number
+           required: false
       responses:
         200:
           description: "OK"
@@ -102,6 +122,11 @@ paths:
       tags:
       - "http-thermostat"
       operationId: targetHeatingCoolingState
+      parameters:
+        - name: temp
+          in: query
+          type: number
+          required: false
       responses:
         200:
           description: "OK"
